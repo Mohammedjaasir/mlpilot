@@ -15,5 +15,5 @@ if hasattr(sys.stderr, "reconfigure"):
 from .auto.data import load, load_csv
 from .auto.trainer import train, compare
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __all__ = ["load", "load_csv", "train", "compare"]

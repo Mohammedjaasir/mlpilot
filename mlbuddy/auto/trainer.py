@@ -16,11 +16,12 @@ MODELS = {
 
 
 class GuidedModel:
-    def __init__(self, model, X_test, y_test, model_name):
+    def __init__(self, model, X_test, y_test, model_name, feature_names=None):
         self.model = model
         self.X_test = X_test
         self.y_test = y_test
         self.model_name = model_name
+        self.feature_names = feature_names
 
         y_pred = model.predict(X_test)
         self.accuracy = accuracy_score(y_test, y_pred)
@@ -31,7 +32,7 @@ class GuidedModel:
 
     def explain(self):
         from ..explain.visualizer import explain_model
-        explain_model(self.model, self.X_test, self.y_test, self.model_name)
+        explain_model(self.model, self.X_test, self.y_test, self.model_name, feature_names=self.feature_names)
 
     def suggest(self):
         suggest(self)
@@ -60,7 +61,12 @@ def train(X_train, X_test, y_train, y_test, model="logistic"):
     print("💡 Tip: Call model.explain() to see what the model learned.")
     print("💡 Tip: Call model.suggest() to get advice on improving it.\n")
 
-    return GuidedModel(clf, X_test, y_test, model)
+    from .data import _FEATURE_NAMES
+    feature_names = None
+    if _FEATURE_NAMES and len(_FEATURE_NAMES) == X_train.shape[1]:
+        feature_names = _FEATURE_NAMES
+
+    return GuidedModel(clf, X_test, y_test, model, feature_names=feature_names)
 
 
 def compare(X_train, X_test, y_train, y_test):

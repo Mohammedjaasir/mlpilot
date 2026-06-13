@@ -3,6 +3,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
+_FEATURE_NAMES = []
+
+
 def load(X, y, test_size=0.2, scale=True, random_state=42):
     print("\n🔍 mlbuddy: Loading your data...\n")
 
@@ -132,5 +135,8 @@ def load_csv(filepath, target_column):
         
     X_processed = pd.concat(processed_cols, axis=1)
     X = X_processed.values
+    
+    global _FEATURE_NAMES
+    _FEATURE_NAMES = list(X_processed.columns)
     
     return load(X, y)
