@@ -12,10 +12,10 @@
 
 ## Key Features
 
-*   ** Automated Model Comparison (`mlbuddy.compare`)**: Compare multiple ML architectures (Logistic Regression, Decision Trees, Random Forests, SVMs) in one command to find the absolute best match for your dataset.
-*   ** Transparent Explanations (`model.explain()`)**: Instantly generate feature importance bar charts or coefficients to see exactly which features drive your model's predictions.
-*   ** Actionable Feedback suggestions (`model.suggest()`)**: Receive direct, intelligent hints on how to improve your model based on its performance metrics (e.g., handling overfitting, engineering features, or tuning hyperparameters).
-*   ** Zero-Config Data Prep (`mlbuddy.load_csv`)**: Automatically handles data scaling and splitting with intelligent defaults.
+*  Automated Model Comparison (`mlbuddy.compare`)**: Compare multiple ML architectures (Logistic Regression, Decision Trees, Random Forests, SVMs) in one command to find the absolute best match for your dataset.
+*  Transparent Explanations (`model.explain()`)**: Instantly generate feature importance bar charts or coefficients to see exactly which features drive your model's predictions.
+*    Actionable Feedback suggestions (`model.suggest()`)**: Receive direct, intelligent hints on how to improve your model based on its performance metrics (e.g., handling overfitting, engineering features, or tuning hyperparameters).
+*  Zero-Config Data Prep (`mlbuddy.load_csv`)**: Automatically handles data scaling and splitting with intelligent defaults.
 
 ---
 
