@@ -1,28 +1,19 @@
 import numpy as np
-import pytest
-from mlbuddy.auto.data import load
+import matplotlib.pyplot as plt
 
 
-def test_load_returns_four_splits():
-    X = np.random.rand(100, 4)
-    y = np.random.randint(0, 2, 100)
-    result = load(X, y)
-    assert len(result) == 4
+def explain_model(model, X_test, y_test, model_name):
+    print(f"\n📊 mlbuddy: Explaining your '{model_name}' model...\n")
 
+    if hasattr(model, "feature_importances_"):
+        _plot_feature_importance(model.feature_importances_, model_name)
 
-def test_load_correct_sizes():
-    X = np.random.rand(100, 4)
-    y = np.random.randint(0, 2, 100)
-    X_train, X_test, y_train, y_test = load(X, y, test_size=0.2)
-    assert len(X_train) == 80
-    assert len(X_test) == 20
+    elif hasattr(model, "coef_"):
+        _plot_coefficients(model.coef_[0], model_name)
 
-
-def test_load_raises_on_shape_mismatch():
-    X = np.random.rand(100, 4)
-    y = np.random.randint(0, 2, 90)   # wrong size — should raise error
-    with pytest.raises(ValueError):
-        load(X, y)
+    else:
+        print("  ℹ This model doesn't expose internals directly.")
+        print("  → Try model='logistic' or model='random_forest'.\n")
 
 
 def _plot_feature_importance(importances, model_name):
