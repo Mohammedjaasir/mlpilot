@@ -10,7 +10,7 @@
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 *   **⚡ Automated Model Comparison (`mlbuddy.compare`)**: Compare multiple ML architectures (Logistic Regression, Decision Trees, Random Forests, SVMs) in one command to find the absolute best match for your dataset.
 *   **📊 Transparent Explanations (`model.explain()`)**: Instantly generate feature importance bar charts or coefficients to see exactly which features drive your model's predictions.
@@ -19,7 +19,7 @@
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 Get up and running in less than 60 seconds.
 
