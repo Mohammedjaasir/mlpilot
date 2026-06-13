@@ -51,6 +51,7 @@ def load_csv(filepath, target_column):
         Tuple of (X_train, X_test, y_train, y_test)
     """
     import pandas as pd
+    from sklearn.preprocessing import LabelEncoder
     
     print(f"\n📂 Loading CSV from: {filepath}\n")
     df = pd.read_csv(filepath)
@@ -63,7 +64,73 @@ def load_csv(filepath, target_column):
             f"  Available columns: {list(df.columns)}"
         )
     
-    y = df[target_column].values
-    X = df.drop(columns=[target_column]).values
+    # Extract target y and feature DataFrame
+    y = df[target_column]
+    X_df = df.drop(columns=[target_column]).copy()
+    
+    # 1. Handle target encoding if it's not numeric
+    if not pd.api.types.is_numeric_dtype(y):
+        if y.isnull().any():
+            mode_val = y.mode().iloc[0] if not y.mode().empty else "Unknown"
+            y = y.fillna(mode_val)
+            print(f"  ⚠ Filled missing target values with mode: '{mode_val}'")
+        
+        le = LabelEncoder()
+        y = le.fit_transform(y.astype(str))
+        print(f"  ✓ Encoded target '{target_column}' classes: {list(le.classes_)}")
+    else:
+        if y.isnull().any():
+            median_val = y.median()
+            y = y.fillna(median_val)
+            print(f"  ⚠ Filled missing target values with median: {median_val}")
+        y = y.values
+        
+    # 2. Process features
+    processed_cols = []
+    
+    for col in X_df.columns:
+        col_data = X_df[col]
+        
+        # Check unique count
+        unique_count = col_data.nunique(dropna=True)
+        
+        if unique_count <= 1:
+            print(f"  ⚠ Dropped constant column '{col}' (has only {unique_count} unique value)")
+            continue
+            
+        # Check missing values
+        if col_data.isnull().any():
+            if pd.api.types.is_numeric_dtype(col_data):
+                fill_val = col_data.median()
+                col_data = col_data.fillna(fill_val)
+                print(f"  ⚠ Filled missing values in numeric column '{col}' with median: {fill_val}")
+            else:
+                fill_val = col_data.mode().iloc[0] if not col_data.mode().empty else "Unknown"
+                col_data = col_data.fillna(fill_val)
+                print(f"  ⚠ Filled missing values in categorical column '{col}' with mode: '{fill_val}'")
+                
+        # Check if numeric vs categorical/object
+        if pd.api.types.is_numeric_dtype(col_data):
+            processed_cols.append(pd.DataFrame({col: col_data}))
+        else:
+            col_data = col_data.astype(str)
+            if unique_count > 100:
+                print(f"  ⚠ Dropped high-cardinality text column '{col}' ({unique_count} unique values)")
+                continue
+            elif unique_count <= 15:
+                dummies = pd.get_dummies(col_data, prefix=col, drop_first=True, dtype=float)
+                processed_cols.append(dummies)
+                print(f"  ✓ One-hot encoded '{col}' ({unique_count} categories -> {dummies.shape[1]} columns)")
+            else:
+                le_feat = LabelEncoder()
+                encoded_feat = le_feat.fit_transform(col_data)
+                processed_cols.append(pd.DataFrame({col: encoded_feat}))
+                print(f"  ✓ Label encoded '{col}' ({unique_count} categories)")
+                
+    if not processed_cols:
+        raise ValueError("✗ No feature columns remaining after preprocessing!")
+        
+    X_processed = pd.concat(processed_cols, axis=1)
+    X = X_processed.values
     
     return load(X, y)

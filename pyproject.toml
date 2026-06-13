@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlbuddy-learn"
-version = "0.1.1"
+version = "0.1.2"
 description = "An ML library that guides beginners step by step"
 readme = "README.md"
 requires-python = ">=3.8"
