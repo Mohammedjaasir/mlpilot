@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 _FEATURE_NAMES = []
 
 
-def load(X, y, test_size=0.2, scale=True, random_state=42):
+def load(X, y, test_size=0.2, scale=True, random_state=42, feature_names=None):
     print("\n🔍 mlbuddy: Loading your data...\n")
 
     if not isinstance(X, np.ndarray):
@@ -38,6 +38,11 @@ def load(X, y, test_size=0.2, scale=True, random_state=42):
         print("  ✓ Features scaled with StandardScaler (mean=0, std=1)")
 
     print(f"\n  📦 Data shape: {X_train.shape[1]} features, {len(set(y))} classes")
+    if feature_names:
+        print("  📋 Feature mapping:")
+        for i, col_name in enumerate(feature_names):
+            print(f"    - Feature {i+1}: {col_name}")
+            
     print("\n✅ Data ready! Pass X_train, X_test, y_train, y_test to ml.train()\n")
 
     return X_train, X_test, y_train, y_test
@@ -139,4 +144,4 @@ def load_csv(filepath, target_column):
     global _FEATURE_NAMES
     _FEATURE_NAMES = list(X_processed.columns)
     
-    return load(X, y)
+    return load(X, y, feature_names=_FEATURE_NAMES)
